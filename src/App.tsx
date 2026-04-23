@@ -190,21 +190,21 @@ export default function App() {
       padding-bottom: 48px;
     }
 
-    /* ── Fixed footer (repeat on every page in Chrome PDF) ── */
-    .page-footer {
+    /* ── Fixed header & footer (repeat on every page in Chrome PDF) ── */
+    .page-header, .page-footer {
       position: fixed;
       left: 28px; right: 28px;
-      bottom: 0;
       height: 46px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #fff;
       z-index: 1000;
-      border-top: 1px solid #d0d5dd;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
+    .page-header { top: 0;    border-bottom: 1px solid #d0d5dd; }
+    .page-footer { bottom: 0; border-top:    1px solid #d0d5dd; }
 
     /* Band: left side */
     .band-left { display: flex; align-items: center; gap: 0; }
@@ -428,6 +428,9 @@ export default function App() {
 </head>
 <body>
 
+  <!-- header repeats on every page -->
+  <div class="page-header">${bandHTML}</div>
+
   <!-- ══ COVER PAGE ══ -->
   <div class="cover-page">
 
@@ -490,7 +493,7 @@ export default function App() {
     <hr class="ai-rule"/>
     <div class="ai-main">
       <div class="ai-left">
-        <div class="ai-heading">*% detected as AI</div>
+        <div class="ai-heading"> 0% detected as AI</div>
         <div class="ai-body">
           AI detection includes the possibility of false positives. Although some text in
           this submission is likely AI generated, scores below the 20% threshold are not
@@ -549,9 +552,6 @@ export default function App() {
 
   </div>
 
-  <!-- page break: AI overview → document content -->
-  <div class="page-break"></div>
-
   <!-- ══ DOCUMENT CONTENT ══ -->
   <div class="doc-content">
     <pre>${safeText}</pre>
@@ -572,7 +572,7 @@ export default function App() {
         const textHeight = docPre.scrollHeight;
         const exactDocPages = Math.max(1, Math.ceil(textHeight / 980));
         const finalTotalPages = 2 + exactDocPages;
-        
+
         const pageSpans = printWindow.document.querySelectorAll('.total-pages');
         pageSpans.forEach((el) => {
           if (el instanceof HTMLElement) {
