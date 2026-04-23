@@ -452,7 +452,6 @@ export default function App() {
 
     <div class="cover-brand">
       <img src="${uniLogoDataUrl}" class="cover-brand-logo" alt="uni-logo"/>
-     
     </div>
 
     <hr class="cover-rule"/>
