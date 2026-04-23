@@ -1,0 +1,6 @@
+{
+  "name": "Docx to Text Converter",
+  "description": "Convert Word (.docx) files to plain text instantly in your browser.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
