@@ -662,7 +662,7 @@ export default function App() {
             <div className="bg-blue-600 p-2 rounded-lg">
               <FileText className="text-white w-5 h-5" />
             </div>
-            <h1 className="font-semibold text-lg tracking-tight">AiCheck_By_Tufan</h1>
+            <h1 className="font-semibold text-lg tracking-tight">AI Check Turnitin</h1>
           </div>
 
           <nav className="flex items-center gap-4">
@@ -686,7 +686,7 @@ export default function App() {
           >
             <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                Turn your Word docs into <span className="text-blue-600">plain text.</span>
+                Chck Your AI Text <span className="text-blue-600">By Turnitin </span>
               </h2>
               <p className="text-lg text-gray-500 max-w-lg mx-auto">
                 Fast, secure, and accurate. Your files never leave your browser.
