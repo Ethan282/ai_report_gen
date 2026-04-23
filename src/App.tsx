@@ -137,52 +137,37 @@ export default function App() {
     const part2 = Math.abs(hash * 31 + 7).toString().padStart(9, '0').slice(0, 9);
     const submissionId = `trn:oid::${part1}:${part2}`;
 
-    // ── Logo → base64 so it works in the new window ──
-    let logoDataUrl: string = new URL(turnitinLogoSrc, window.location.origin).href;
-    try {
-      const response = await fetch(logoDataUrl);
-      if (response.ok) {
-        const blob = await response.blob();
-        logoDataUrl = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(blob);
-        });
-      }
-    } catch {
-      // Keep absolute URL fallback
-    }
-
-    // ── AI Illustration → base64 ──
-    let aiLogoDataUrl: string = new URL(aiIllustrationSrc, window.location.origin).href;
-    try {
-      const response = await fetch(aiLogoDataUrl);
-      if (response.ok) {
-        const blob = await response.blob();
-        aiLogoDataUrl = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(blob);
-        });
-      }
-    } catch {
-      // Keep absolute URL fallback
-    }
-
-    // ── Uni Logo → base64 ──
-    let uniLogoDataUrl: string = uniLogoSrc;
-    try {
-      const response = await fetch(uniLogoSrc);
-      const blob = await response.blob();
-      uniLogoDataUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
+    // ── Convert Images to Base64 (Robust Canvas Method) ──
+    const imageToBase64 = (url: string): Promise<string> => {
+      return new Promise((resolve) => {
+        const absoluteUrl = new URL(url, window.location.origin).href;
+        // If it's already a data URL, return it
+        if (absoluteUrl.startsWith('data:')) {
+          resolve(absoluteUrl);
+          return;
+        }
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          } else {
+            resolve(absoluteUrl);
+          }
+        };
+        img.onerror = () => resolve(absoluteUrl);
+        img.src = absoluteUrl;
       });
+    };
 
-    } catch {
-      uniLogoDataUrl = uniLogoSrc;
-    }
+    const logoDataUrl = await imageToBase64(turnitinLogoSrc);
+    const aiLogoDataUrl = await imageToBase64(aiIllustrationSrc);
+    const uniLogoDataUrl = await imageToBase64(uniLogoSrc);
 
     // ── Shared header/footer band HTML ──
     const getBandHTML = (pageNum: number, total: number) => `
@@ -639,8 +624,29 @@ export default function App() {
         printWindow.document.body.appendChild(footer);
       }
 
-      // Finally trigger the native print dialog
-      printWindow.print();
+      // Wait for all images to load before calling print()
+      const images = Array.from(printWindow.document.images);
+      let loadedCount = 0;
+
+      const checkAndPrint = () => {
+        loadedCount++;
+        if (loadedCount >= images.length) {
+          setTimeout(() => printWindow.print(), 150);
+        }
+      };
+
+      if (images.length === 0) {
+        printWindow.print();
+      } else {
+        images.forEach((img) => {
+          if (img.complete) {
+            checkAndPrint();
+          } else {
+            img.onload = checkAndPrint;
+            img.onerror = checkAndPrint;
+          }
+        });
+      }
     }, 600);
   };
 
