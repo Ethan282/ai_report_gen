@@ -662,7 +662,7 @@ export default function App() {
             <div className="bg-blue-600 p-2 rounded-lg">
               <FileText className="text-white w-5 h-5" />
             </div>
-            <h1 className="font-semibold text-lg tracking-tight">DocxToText</h1>
+            <h1 className="font-semibold text-lg tracking-tight">AiCheck_By_Tufan</h1>
           </div>
 
           <nav className="flex items-center gap-4">
@@ -865,7 +865,7 @@ export default function App() {
       <footer className="max-w-5xl mx-auto px-4 py-12 border-t border-gray-100 mt-20">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-sm text-gray-400">
-            © 2026 DocxToText. All file processing happens locally.
+            © 2026 ai_ckeck_by_tufan. All file processing happens locally.
           </p>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
