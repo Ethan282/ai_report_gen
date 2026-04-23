@@ -339,7 +339,7 @@ export default function App() {
     }
 
     /* ── Document content ── */
-    .doc-content { padding: 0.5cm 28px 1cm 28px; }
+    .doc-content { padding: 0 28px; }
     pre {
       font-family: Georgia, serif;
       font-size: 11pt;
@@ -566,9 +566,15 @@ export default function App() {
   </div>
 
   <!-- ══ DOCUMENT CONTENT ══ -->
-  <div class="doc-content">
-    <pre>${safeText}</pre>
-  </div>
+  <table style="width: 100%; border: none; border-collapse: collapse;">
+    <thead style="height: 65px;"><tr><td></td></tr></thead>
+    <tbody><tr><td>
+      <div class="doc-content">
+        <pre>${safeText}</pre>
+      </div>
+    </td></tr></tbody>
+    <tfoot style="height: 84px;"><tr><td></td></tr></tfoot>
+  </table>
 
   <!-- footers are injected dynamically -->
 </body>
