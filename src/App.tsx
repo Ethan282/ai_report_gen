@@ -602,9 +602,7 @@ export default function App() {
 
         const pageSpans = printWindow.document.querySelectorAll('.total-pages');
         pageSpans.forEach((el) => {
-          if (el instanceof HTMLElement) {
-            el.innerText = finalTotalPages.toString();
-          }
+          el.textContent = finalTotalPages.toString();
         });
       }
 
