@@ -26,6 +26,7 @@ import uniLogoSrc from './lib/asset/uniLogo.svg.png';
 
 interface ConversionResult {
   text: string;
+  html?: string;
   fileName: string;
   fileSize: number;
 }
@@ -51,10 +52,12 @@ export default function App() {
 
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const conversionResult = await mammoth.extractRawText({ arrayBuffer });
+      const conversionResult = await mammoth.extractRawText({ arrayBuffer: arrayBuffer.slice(0) });
+      const htmlResult = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer.slice(0) });
 
       setResult({
         text: conversionResult.value,
+        html: htmlResult.value,
         fileName: file.name,
         fileSize: file.size,
       });
@@ -105,7 +108,7 @@ export default function App() {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const safeText = result.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const htmlContent = result.html || result.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const docName = result.fileName.replace('.docx', '');
 
     // ── Computed stats ──
@@ -135,31 +138,35 @@ export default function App() {
     const submissionId = `trn:oid::${part1}:${part2}`;
 
     // ── Logo → base64 so it works in the new window ──
-    let logoDataUrl: string = turnitinLogoSrc;
+    let logoDataUrl: string = new URL(turnitinLogoSrc, window.location.origin).href;
     try {
-      const response = await fetch(turnitinLogoSrc);
-      const blob = await response.blob();
-      logoDataUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
+      const response = await fetch(logoDataUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        logoDataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(blob);
+        });
+      }
     } catch {
-      logoDataUrl = turnitinLogoSrc;
+      // Keep absolute URL fallback
     }
 
     // ── AI Illustration → base64 ──
-    let aiLogoDataUrl: string = aiIllustrationSrc;
+    let aiLogoDataUrl: string = new URL(aiIllustrationSrc, window.location.origin).href;
     try {
-      const response = await fetch(aiIllustrationSrc);
-      const blob = await response.blob();
-      aiLogoDataUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
+      const response = await fetch(aiLogoDataUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        aiLogoDataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(blob);
+        });
+      }
     } catch {
-      aiLogoDataUrl = aiIllustrationSrc;
+      // Keep absolute URL fallback
     }
 
     // ── Uni Logo → base64 ──
@@ -172,6 +179,7 @@ export default function App() {
         reader.onloadend = () => resolve(reader.result as string);
         reader.readAsDataURL(blob);
       });
+
     } catch {
       uniLogoDataUrl = uniLogoSrc;
     }
@@ -340,6 +348,19 @@ export default function App() {
 
     /* ── Document content ── */
     .doc-content { padding: 0 28px; }
+    .doc-html-content {
+      font-family: Georgia, serif;
+      font-size: 11pt;
+      line-height: 1.85;
+      color: #111;
+    }
+    .doc-html-content p { margin-bottom: 1em; }
+    .doc-html-content img { max-width: 100%; height: auto; margin: 1em auto; display: block; }
+    .doc-html-content table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    .doc-html-content td, .doc-html-content th { border: 1px solid #ccc; padding: 6px; }
+    .doc-html-content h1, .doc-html-content h2, .doc-html-content h3 { font-weight: bold; margin-bottom: 0.5em; line-height: 1.3; }
+    .doc-html-content ul, .doc-html-content ol { margin-left: 20px; margin-bottom: 1em; }
+    .doc-html-content li { margin-bottom: 0.5em; }
     pre {
       font-family: Georgia, serif;
       font-size: 11pt;
@@ -569,8 +590,8 @@ export default function App() {
   <table style="width: 100%; border: none; border-collapse: collapse;">
     <thead style="height: 65px;"><tr><td></td></tr></thead>
     <tbody><tr><td>
-      <div class="doc-content">
-        <pre>${safeText}</pre>
+      <div class="doc-content doc-html-content">
+        ${htmlContent}
       </div>
     </td></tr></tbody>
     <tfoot style="height: 84px;"><tr><td></td></tr></tfoot>
@@ -588,7 +609,7 @@ export default function App() {
       printWindow.document.body.style.position = 'relative';
 
       let finalTotalPages = estimatedDocPages + 2;
-      const docPre = printWindow.document.querySelector('.doc-content pre');
+      const docPre = printWindow.document.querySelector('.doc-content');
       if (docPre) {
         const textHeight = docPre.scrollHeight;
         const exactDocPages = Math.max(1, Math.ceil(textHeight / 980));
@@ -799,9 +820,13 @@ export default function App() {
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/10 pointer-events-none rounded-3xl shadow-inner border border-gray-200" />
               <div
                 ref={textOutputRef}
-                className="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 min-h-[500px] max-h-[80vh] overflow-y-auto whitespace-pre-wrap font-sans text-lg text-gray-800 leading-relaxed scrollbar-hide shadow-sm"
+                className="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 min-h-[500px] max-h-[80vh] overflow-y-auto font-sans text-lg text-gray-800 leading-relaxed scrollbar-hide shadow-sm [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_img]:max-w-full [&_img]:mx-auto [&_img]:h-auto [&_img]:my-4 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-gray-300 [&_td]:p-2 [&_th]:border [&_th]:border-gray-300 [&_th]:p-2 [&_th]:bg-gray-100"
               >
-                {result.text || (
+                {result.html ? (
+                  <div dangerouslySetInnerHTML={{ __html: result.html }} />
+                ) : result.text ? (
+                  <div className="whitespace-pre-wrap">{result.text}</div>
+                ) : (
                   <div className="h-full flex flex-col items-center justify-center text-gray-300 py-20 italic">
                     No text content found in document.
                   </div>
