@@ -22,6 +22,7 @@ import {
 import { cn } from './lib/utils';
 import turnitinLogoSrc from './lib/asset/330px-Turnitin_logo_(2021).svg.png';
 import aiIllustrationSrc from './lib/asset/Screenshot2.svg.png';
+import uniLogoSrc from './lib/asset/uniLogo.svg.png';
 
 interface ConversionResult {
   text: string;
@@ -161,12 +162,26 @@ export default function App() {
       aiLogoDataUrl = aiIllustrationSrc;
     }
 
+    // ── Uni Logo → base64 ──
+    let uniLogoDataUrl: string = uniLogoSrc;
+    try {
+      const response = await fetch(uniLogoSrc);
+      const blob = await response.blob();
+      uniLogoDataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    } catch {
+      uniLogoDataUrl = uniLogoSrc;
+    }
+
     // ── Shared header/footer band HTML ──
-    const bandHTML = `
+    const getBandHTML = (pageNum: number, total: number) => `
       <div class="band-left">
         <img src="${logoDataUrl}" class="logo-img" alt="turnitin" />
         <div class="pipe"></div>
-        <span class="page-info">Page 1 of <span class="total-pages">${estimatedDocPages + 2}</span> - Cover Page</span>
+        <span class="page-info">Page ${pageNum} of <span class="total-pages">${total}</span></span>
       </div>
       <div class="band-right">
         <span class="band-label">Submission ID</span>
@@ -190,9 +205,9 @@ export default function App() {
       padding-bottom: 48px;
     }
 
-    /* ── Fixed header & footer (repeat on every page in Chrome PDF) ── */
+    /* ── Headers & footers (injected via JS per page) ── */
     .page-header, .page-footer {
-      position: fixed;
+      position: absolute;
       left: 28px; right: 28px;
       height: 46px;
       display: flex;
@@ -203,8 +218,8 @@ export default function App() {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    .page-header { top: 0;    border-bottom: 1px solid #d0d5dd; }
-    .page-footer { bottom: 0; border-top:    1px solid #d0d5dd; }
+    .page-header { border-bottom: 1px solid #d0d5dd; }
+    .page-footer { border-top: 1px solid #d0d5dd; }
 
     /* Band: left side */
     .band-left { display: flex; align-items: center; gap: 0; }
@@ -428,8 +443,7 @@ export default function App() {
 </head>
 <body>
 
-  <!-- header repeats on every page -->
-  <div class="page-header">${bandHTML}</div>
+  <!-- headers are injected dynamically -->
 
   <!-- ══ COVER PAGE ══ -->
   <div class="cover-page">
@@ -437,8 +451,8 @@ export default function App() {
     <div class="cover-title">${docName}</div>
 
     <div class="cover-brand">
-      <img src="${logoDataUrl}" class="cover-brand-logo" alt="turnitin"/>
-      <span class="cover-brand-name">Turnitin</span>
+      <img src="${uniLogoDataUrl}" class="cover-brand-logo" alt="uni-logo"/>
+     
     </div>
 
     <hr class="cover-rule"/>
@@ -557,8 +571,7 @@ export default function App() {
     <pre>${safeText}</pre>
   </div>
 
-  <!-- footer repeats on every page -->
-  <div class="page-footer">${bandHTML}</div>
+  <!-- footers are injected dynamically -->
 </body>
 </html>`);
 
@@ -567,11 +580,14 @@ export default function App() {
 
     // Wait for render, measure total doc-content height, and set exact page counts
     setTimeout(() => {
+      printWindow.document.body.style.position = 'relative';
+
+      let finalTotalPages = estimatedDocPages + 2;
       const docPre = printWindow.document.querySelector('.doc-content pre');
       if (docPre) {
         const textHeight = docPre.scrollHeight;
         const exactDocPages = Math.max(1, Math.ceil(textHeight / 980));
-        const finalTotalPages = 2 + exactDocPages;
+        finalTotalPages = 2 + exactDocPages;
 
         const pageSpans = printWindow.document.querySelectorAll('.total-pages');
         pageSpans.forEach((el) => {
@@ -580,6 +596,23 @@ export default function App() {
           }
         });
       }
+
+      // Inject absolute header and footer for each page
+      for (let i = 1; i <= finalTotalPages; i++) {
+        const header = printWindow.document.createElement('div');
+        header.className = 'page-header';
+        header.style.top = `calc(${i - 1} * 297mm)`;
+        header.innerHTML = getBandHTML(i, finalTotalPages);
+
+        const footer = printWindow.document.createElement('div');
+        footer.className = 'page-footer';
+        footer.style.top = `calc(${i} * 297mm - 46px)`;
+        footer.innerHTML = getBandHTML(i, finalTotalPages);
+
+        printWindow.document.body.appendChild(header);
+        printWindow.document.body.appendChild(footer);
+      }
+
       // Finally trigger the native print dialog
       printWindow.print();
     }, 600);
