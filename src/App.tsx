@@ -170,16 +170,19 @@ export default function App() {
     const uniLogoDataUrl = await imageToBase64(uniLogoSrc);
 
     // ── Shared header/footer band HTML ──
-    const getBandHTML = (pageNum: number, total: number) => `
+    const getBandHTML = (pageNum: number, total: number) => {
+      const pageLabel = pageNum === 1 ? ' - Cover Page' : pageNum === 2 ? ' - AI Writing Overview' : ' - AI Writing Submission';
+      return `
       <div class="band-left">
         <img src="${logoDataUrl}" class="logo-img" alt="turnitin" />
         <div class="pipe"></div>
-        <span class="page-info">Page ${pageNum} of <span class="total-pages">${total}</span></span>
+        <span class="page-info">Page ${pageNum} of <span class="total-pages">${total}</span>${pageLabel}</span>
       </div>
       <div class="band-right">
         <span class="band-label">Submission ID</span>
         <span class="band-id">&nbsp;&nbsp;${submissionId}</span>
       </div>`;
+    };
 
     printWindow.document.write(`<!DOCTYPE html>
 <html>
