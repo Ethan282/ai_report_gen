@@ -231,7 +231,7 @@ export default function App() {
     .band-right { display: flex; align-items: center; font-size: 7.5pt; }
     .band-label { color: #5a6272; }
     .band-id {
-      color: #e08030; font-weight: 500;
+      color: #5a6272; font-weight: 500;
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
 
@@ -417,11 +417,51 @@ export default function App() {
       color: #444;
       line-height: 1.5;
     }
+    /* ── Detection Groups ── */
+    .detection-groups-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #111;
+      margin: 28px 0 18px 0;
+    }
+    .detection-group-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .detection-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .detection-info {}
+    .detection-label {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 3px;
+    }
+    .detection-desc {
+      font-size: 8.5pt;
+      color: #555;
+      line-height: 1.4;
+    }
     .faq-title {
       font-size: 13.5pt;
       font-weight: 700;
       color: #111;
       margin: 24px 0 14px 0;
+    }
+    .faq-q {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #111;
+      margin-top: 20px;
+      margin-bottom: 4px;
     }
     .faq-image {
       float: right;
@@ -430,13 +470,6 @@ export default function App() {
       margin-bottom: 15px;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-    }
-    .faq-q {
-      font-size: 9.5pt;
-      font-weight: 700;
-      color: #111;
-      margin-top: 20px;
-      margin-bottom: 4px;
     }
     .faq-a {
       font-size: 9.5pt;
@@ -509,14 +542,12 @@ export default function App() {
   <!-- ══ PAGE 2: AI WRITING OVERVIEW ══ -->
   <div class="ai-page">
 
-    <hr class="ai-rule"/>
     <div class="ai-main">
       <div class="ai-left">
-        <div class="ai-heading"> 0% detected as AI</div>
+        <div class="ai-heading">0% detected as AI</div>
         <div class="ai-body">
-          AI detection includes the possibility of false positives. Although some text in
-          this submission is likely AI generated, scores below the 20% threshold are not
-          surfaced because they have a higher likelihood of false positives.
+          The percentage indicates the combined amount of likely AI-generated text as
+          well as likely AI-generated text that was also likely AI-paraphrased.
         </div>
       </div>
       <div class="caution-box">
@@ -530,13 +561,68 @@ export default function App() {
     </div>
     <hr class="ai-rule"/>
 
+    <div class="detection-groups-title">Detection Groups</div>
+
+    <div class="detection-group-item">
+      <svg class="detection-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="#67e8f9"/>
+        <!-- antenna -->
+        <circle cx="18" cy="7" r="1.5" fill="#1a1a2e"/>
+        <rect x="17.2" y="8" width="1.6" height="3" fill="#1a1a2e"/>
+        <!-- head -->
+        <rect x="10" y="11" width="16" height="14" rx="3" fill="#1a1a2e"/>
+        <!-- ears -->
+        <rect x="7" y="15" width="3" height="5" rx="1.5" fill="#1a1a2e"/>
+        <rect x="26" y="15" width="3" height="5" rx="1.5" fill="#1a1a2e"/>
+        <!-- eyes -->
+        <rect x="13" y="15" width="3.5" height="3.5" rx="0.8" fill="#67e8f9"/>
+        <rect x="19.5" y="15" width="3.5" height="3.5" rx="0.8" fill="#67e8f9"/>
+        <!-- mouth grid -->
+        <rect x="13" y="21" width="10" height="2" rx="0.5" fill="#67e8f9"/>
+        <rect x="15.5" y="20.5" width="1" height="3" fill="#1a1a2e"/>
+        <rect x="18.5" y="20.5" width="1" height="3" fill="#1a1a2e"/>
+      </svg>
+      <div class="detection-info">
+        <div class="detection-label">0&nbsp; AI-generated only&nbsp; 0%</div>
+        <div class="detection-desc">Likely AI-generated text from a large-language model.</div>
+      </div>
+    </div>
+
+    <div class="detection-group-item">
+      <svg class="detection-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="#c4b5fd"/>
+        <!-- antenna -->
+        <circle cx="18" cy="7" r="1.5" fill="#3b0764"/>
+        <rect x="17.2" y="8" width="1.6" height="3" fill="#3b0764"/>
+        <!-- head -->
+        <rect x="10" y="11" width="16" height="14" rx="3" fill="#3b0764"/>
+        <!-- ears -->
+        <rect x="7" y="15" width="3" height="5" rx="1.5" fill="#3b0764"/>
+        <rect x="26" y="15" width="3" height="5" rx="1.5" fill="#3b0764"/>
+        <!-- eyes -->
+        <rect x="13" y="15" width="3.5" height="3.5" rx="0.8" fill="#c4b5fd"/>
+        <rect x="19.5" y="15" width="3.5" height="3.5" rx="0.8" fill="#c4b5fd"/>
+        <!-- mouth grid -->
+        <rect x="13" y="21" width="10" height="2" rx="0.5" fill="#c4b5fd"/>
+        <rect x="15.5" y="20.5" width="1" height="3" fill="#3b0764"/>
+        <rect x="18.5" y="20.5" width="1" height="3" fill="#3b0764"/>
+        <!-- gear accent -->
+        <circle cx="28" cy="27" r="4" fill="#c4b5fd" stroke="#3b0764" stroke-width="1.2"/>
+        <circle cx="28" cy="27" r="1.5" fill="#3b0764"/>
+      </svg>
+      <div class="detection-info">
+        <div class="detection-label">0&nbsp; AI-generated text that was AI-paraphrased&nbsp; 0%</div>
+        <div class="detection-desc">Likely AI-generated text that was likely revised using an AI-paraphrase tool or word spinner.</div>
+      </div>
+    </div>
+
+    <hr class="ai-rule"/>
+
     <div class="disclaimer-title">Disclaimer</div>
     <div class="disclaimer-text">
-      Our AI writing assessment is designed to help educators identify text that might be prepared by a generative AI tool.
-      Our AI writing assessment may not always be accurate (it may misidentify writing that is likely to be AI-generated text
-      as likely not to be AI-generated and vice versa). Because our Al assessment should not be used as the sole basis to
-      take adverse actions against a student, it takes further reading and human judgment in conjunction with an organisation's
-      application of its specific academic policies to determine whether any academic misconduct has occurred.
+      Our AI writing assessment is designed to help educators identify text that might be prepared by a generative AI tool. Our AI writing assessment may not always be accurate (i.e., our AI models
+      may produce either false positive results or false negative results), so it should not be used as the sole basis for adverse actions against a student. It takes further scrutiny and human
+      judgment in conjunction with an organization's application of its specific academic policies to determine whether any academic misconduct has occurred.
     </div>
 
     <div class="faq-title">Frequently Asked Questions</div>
