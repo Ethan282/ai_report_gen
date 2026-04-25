@@ -678,12 +678,16 @@ export default function App() {
     // Wait for render, measure total doc-content height, and set exact page counts
     setTimeout(() => {
       printWindow.document.body.style.position = 'relative';
+      // Constrain to A4 width so text wraps the same as in print
+      printWindow.document.body.style.width = '210mm';
+      // Force reflow at A4 width
+      printWindow.document.body.offsetHeight;
 
       let finalTotalPages = estimatedDocPages + 2;
       const docPre = printWindow.document.querySelector('.doc-content');
       if (docPre) {
         const textHeight = docPre.scrollHeight;
-        const exactDocPages = Math.max(1, Math.ceil(textHeight / 980));
+        const exactDocPages = Math.max(1, Math.ceil(textHeight / 850));
         finalTotalPages = 2 + exactDocPages;
 
         const pageSpans = printWindow.document.querySelectorAll('.total-pages');
