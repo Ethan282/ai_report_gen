@@ -237,7 +237,7 @@ export default function App() {
 
     /* ══ COVER PAGE ══ */
     .cover-page {
-      min-height: calc(100vh - 96px);
+      height: calc(297mm - 96px);
       padding: 0 28px 1.8cm 28px;
       display: flex;
       flex-direction: column;
@@ -357,22 +357,22 @@ export default function App() {
 
     /* ── AI Writing Overview Page ── */
     .ai-page {
-      padding: 1.8cm 28px 1cm 28px;
+      padding: 1.2cm 28px 0.5cm 28px;
       page-break-after: always;
       break-after: page;
     }
     .ai-main {
       display: flex;
-      gap: 1.2cm;
+      gap: 0.8cm;
       align-items: flex-start;
-      padding: 24px 0;
+      padding: 14px 0;
     }
     .ai-left { flex: 1; }
     .ai-heading {
-      font-size: 22pt;
+      font-size: 20pt;
       font-weight: 700;
       color: #111;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       line-height: 1.1;
     }
     .ai-body {
@@ -409,8 +409,8 @@ export default function App() {
       font-size: 8.5pt;
       font-weight: 700;
       color: #111;
-      margin-top: 20px;
-      margin-bottom: 5px;
+      margin-top: 12px;
+      margin-bottom: 3px;
     }
     .disclaimer-text {
       font-size: 7.5pt;
@@ -419,16 +419,16 @@ export default function App() {
     }
     /* ── Detection Groups ── */
     .detection-groups-title {
-      font-size: 13pt;
+      font-size: 12pt;
       font-weight: 700;
       color: #111;
-      margin: 28px 0 18px 0;
+      margin: 16px 0 10px 0;
     }
     .detection-group-item {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 18px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
     .detection-icon {
       width: 28px;
@@ -451,17 +451,17 @@ export default function App() {
       line-height: 1.4;
     }
     .faq-title {
-      font-size: 13.5pt;
+      font-size: 12pt;
       font-weight: 700;
       color: #111;
-      margin: 24px 0 14px 0;
+      margin: 14px 0 8px 0;
     }
     .faq-q {
-      font-size: 9.5pt;
+      font-size: 9pt;
       font-weight: 700;
       color: #111;
-      margin-top: 20px;
-      margin-bottom: 4px;
+      margin-top: 12px;
+      margin-bottom: 3px;
     }
     .faq-image {
       float: right;
