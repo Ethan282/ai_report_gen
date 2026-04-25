@@ -214,9 +214,9 @@ export default function App() {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    .page-header { padding-top: 8px; }
+    .page-header { }
     .page-header-lined { border-bottom: 1px solid #d0d5dd; }
-    .page-footer { padding-bottom: 8px; }
+    .page-footer { }
     .page-footer-lined { border-top: 1px solid #d0d5dd; }
 
     /* Band: left side */
@@ -705,12 +705,12 @@ export default function App() {
       for (let i = 1; i <= finalTotalPages; i++) {
         const header = printWindow.document.createElement('div');
         header.className = i === 2 ? 'page-header page-header-lined' : 'page-header';
-        header.style.top = `calc(${i - 1} * 297mm)`;
+        header.style.top = `calc(${i - 1} * 297mm + 12px)`;
         header.innerHTML = getBandHTML(i, finalTotalPages);
 
         const footer = printWindow.document.createElement('div');
         footer.className = i === 2 ? 'page-footer page-footer-lined' : 'page-footer';
-        footer.style.top = `calc(${i} * 297mm - 46px)`;
+        footer.style.top = `calc(${i} * 297mm - 46px - 12px)`;
         footer.innerHTML = getBandHTML(i, finalTotalPages);
 
         printWindow.document.body.appendChild(header);
