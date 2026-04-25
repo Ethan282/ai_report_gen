@@ -867,13 +867,7 @@ export default function App() {
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <button
-                  onClick={reset}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors group"
-                  title="Go Back"
-                >
-                  <ArrowLeft className="w-5 h-5 text-gray-500 group-hover:text-gray-900" />
-                </button>
+
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <FileText className="text-blue-600 w-5 h-5" />
@@ -887,30 +881,18 @@ export default function App() {
 
               <div className="flex items-center gap-2 md:gap-3">
                 <button
-                  onClick={handleCopy}
-                  className={cn(
-                    "flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-12 rounded-xl font-medium transition-all",
-                    copied
-                      ? "bg-green-600 text-white"
-                      : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 active:scale-95"
-                  )}
+                  onClick={reset}
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-12 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all active:scale-95"
                 >
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  <span>{copied ? 'Copied!' : 'Copy Text'}</span>
-                </button>
-                <button
-                  onClick={handleDownload}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-12 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition-all active:scale-95"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download .txt</span>
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Reset</span>
                 </button>
                 <button
                   onClick={handlePrintToPdf}
                   className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-12 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-all active:scale-95"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>Print to PDF</span>
+                  <span>Generate Turnitin Report</span>
                 </button>
               </div>
             </div>
