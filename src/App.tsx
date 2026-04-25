@@ -20,6 +20,7 @@ import {
   Printer
 } from 'lucide-react';
 import { cn } from './lib/utils';
+import Login from './Login';
 import turnitinLogoSrc from './lib/asset/330px-Turnitin_logo_(2021).svg.png';
 import aiIllustrationSrc from './lib/asset/Screenshot2.svg.png';
 import uniLogoSrc from './lib/asset/uniLogo.svg.png';
@@ -36,6 +37,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const textOutputRef = useRef<HTMLDivElement>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -748,16 +750,17 @@ export default function App() {
     setError(null);
   };
 
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#111827] font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* Header */}
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-2 rounded-lg">
-              <FileText className="text-white w-5 h-5" />
-            </div>
-            <h1 className="font-semibold text-lg tracking-tight">AI Check Turnitin</h1>
+          <div className="flex items-center gap-3">
+            <img src={turnitinLogoSrc} alt="Turnitin" className="h-8 w-auto" />
           </div>
 
           <nav className="flex items-center gap-4">
@@ -898,7 +901,7 @@ export default function App() {
             </div>
 
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/10 pointer-events-none rounded-3xl shadow-inner border border-gray-200" />
+              <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white/10 pointer-events-none rounded-3xl shadow-inner border border-gray-200" />
               <div
                 ref={textOutputRef}
                 className="bg-white p-8 md:p-12 rounded-3xl border border-gray-200 min-h-[500px] max-h-[80vh] overflow-y-auto font-sans text-lg text-gray-800 leading-relaxed scrollbar-hide shadow-sm [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_img]:max-w-full [&_img]:mx-auto [&_img]:h-auto [&_img]:my-4 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-gray-300 [&_td]:p-2 [&_th]:border [&_th]:border-gray-300 [&_th]:p-2 [&_th]:bg-gray-100"
