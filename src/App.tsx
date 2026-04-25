@@ -243,10 +243,10 @@ export default function App() {
     /* ══ COVER PAGE ══ */
     .cover-page {
       height: calc(297mm - 96px);
-      padding: 0 28px 1.8cm 28px;
+      padding: 0 28px 0 28px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
     }
 
     /* Title */
@@ -266,11 +266,11 @@ export default function App() {
       margin-bottom: 18px;
     }
     .cover-brand-logo {
-      height: 17px; width: auto;
+      height: 28px; width: auto;
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .cover-brand-name {
-      font-size: 9pt;
+      font-size: 10.5pt;
       color: #444;
     }
 
