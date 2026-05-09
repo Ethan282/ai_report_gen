@@ -143,7 +143,7 @@ export default function Login({ onLogin }: LoginProps) {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          © 2026 ai_check_by_tufan · All processing is client-side
+          © 2026 ai_check_by_tufan · All processing is client-side_v2.0
         </p>
       </motion.div>
     </div>
